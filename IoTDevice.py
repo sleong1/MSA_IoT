@@ -18,7 +18,7 @@ class IntruderDetector(object):
         self.CONNECTION_STRING = "HostName=su-MSA.azure-devices.net;DeviceId=MyPythonDevice;SharedAccessKey=ZqigHWDCQ696rya1jI24fA9X3/RAtgbIqkN6WEo0ROc="
 
         # Define the JSON message to send to IoT Hub.
-        self.DISTANCE = 150.0
+        self.DISTANCE = 250.0
         self.INTENSITY = 255
         MSG_TXT = '{{"Distance": {distance}, "intensity": {intensity}}}'
 
@@ -57,26 +57,26 @@ class IntruderDetector(object):
 
 
     def run(self):
-        print ( "IoT Hub device sending periodic messages, press Ctrl-C to exit" )
+        print ( "IoT Hub devices sending periodic messages, press Ctrl-C to exit" )
         try:
-            # Start a thread to listen 
-            device_method_thread = threading.Thread(target=device_method_listener, args=(self.client,))
-            device_method_thread.daemon = True
-            device_method_thread.start()
+            # # Start a thread to listen 
+            # device_method_thread = threading.Thread(target=device_method_listener, args=(self.client,))
+            # device_method_thread.daemon = True
+            # device_method_thread.start()
 
             while True:
                 # Build the message with simulated telemetry values.
-                temperature = TEMPERATURE + (random.random() * 15)
-                humidity = HUMIDITY + (random.random() * 20)
-                msg_txt_formatted = MSG_TXT.format(temperature=temperature, humidity=humidity)
+                distance = self.DISTANCE - (random.random() * 150)
+                intensity = self.INTENSITY - (random.random() * 100)
+                msg_txt_formatted = MSG_TXT.format(distance=distance, intensity=intensity)
                 message = Message(msg_txt_formatted)
 
                 # Add a custom application property to the message.
                 # An IoT hub can filter on these properties without access to the message body.
-                if temperature > 30:
-                  message.custom_properties["temperatureAlert"] = "true"
+                if self.DISTANCE < 100. && self.INTENSITY < 200:
+                  message.custom_properties["intruderAlert"] = "true"
                 else:
-                  message.custom_properties["temperatureAlert"] = "false"
+                  message.custom_properties["intruderAlert"] = "false"
 
                 # Send the message.
                 print( "Sending message: {}".format(message) )
@@ -85,7 +85,7 @@ class IntruderDetector(object):
                 time.sleep(INTERVAL)
 
         except KeyboardInterrupt:
-            print ( "IoTHubClient sample stopped" )
+            print ( "intruderAlert stopped" )
 
 if __name__ == '__main__':
     print ( "Simulated Intruder Detector" )
