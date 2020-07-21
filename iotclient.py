@@ -21,20 +21,20 @@ from azure.eventhub.aio import EventHubConsumerClient
 
 
 # Event Hub-compatible endpoint
-# az iot hub show --query properties.eventHubEndpoints.events.endpoint --name {your IoT Hub name}
-EVENTHUB_COMPATIBLE_ENDPOINT = "{your Event Hubs compatible endpoint}"
+# az iot hub show --query properties.eventHubEndpoints.events.endpoint --name su-MSA
+EVENTHUB_COMPATIBLE_ENDPOINT = "sb://ihsuprodsnres005dednamespace.servicebus.windows.net/"
 
 # Event Hub-compatible name
-# az iot hub show --query properties.eventHubEndpoints.events.path --name {your IoT Hub name}
-EVENTHUB_COMPATIBLE_PATH = "{your Event Hubs compatible name}"
+# az iot hub show --query properties.eventHubEndpoints.events.path --name su-MSA
+EVENTHUB_COMPATIBLE_PATH = "iothub-ehub-su-msa-3836041-9225066337"
 
 # Primary key for the "service" policy to read messages
-# az iot hub policy show --name service --query primaryKey --hub-name {your IoT Hub name}
-IOTHUB_SAS_KEY = "{your service primary key}"
+# az iot hub policy show --name service --query primaryKey --hub-name su-MSA
+IOTHUB_SAS_KEY = "rCYxF2XMF93L3D3BtG2ZPnGmP88WMrl4qHCoZnLMCKI="
 
 # If you have access to the Event Hub-compatible connection string from the Azure portal, then
 # you can skip the Azure CLI commands above, and assign the connection string directly here.
-CONNECTION_STR = f'Endpoint={EVENTHUB_COMPATIBLE_ENDPOINT}/;SharedAccessKeyName=service;SharedAccessKey={IOTHUB_SAS_KEY};EntityPath={EVENTHUB_COMPATIBLE_PATH}'
+CONNECTION_STR = "HostName=su-MSA.azure-devices.net;SharedAccessKeyName=service;SharedAccessKey=rCYxF2XMF93L3D3BtG2ZPnGmP88WMrl4qHCoZnLMCKI="
 
 # Define callbacks to process events
 async def on_event_batch(partition_context, events):
@@ -61,7 +61,7 @@ def main():
     loop = asyncio.get_event_loop()
     client = EventHubConsumerClient.from_connection_string(
         conn_str=CONNECTION_STR,
-        consumer_group="$default",
+        consumer_group="myendpoint",
         # transport_type=TransportType.AmqpOverWebsocket,  # uncomment it if you want to use web socket
         # http_proxy={  # uncomment if you want to use proxy 
         #     'proxy_hostname': '127.0.0.1',  # proxy hostname.
