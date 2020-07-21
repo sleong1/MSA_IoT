@@ -20,9 +20,9 @@ class IntruderDetector(object):
         # Define the JSON message to send to IoT Hub.
         self.DISTANCE = 250.0
         self.INTENSITY = 255
-        MSG_TXT = '{{"Distance": {distance}, "intensity": {intensity}}}'
+        self.MSG_TXT = '{{"Distance": {distance}, "intensity": {intensity}}}'
 
-        INTERVAL = 1
+        self.INTERVAL = 1
 
         # Create an IoT Hub client
         self.client = IoTHubDeviceClient.create_from_connection_string(self.CONNECTION_STRING)
@@ -66,14 +66,14 @@ class IntruderDetector(object):
 
             while True:
                 # Build the message with simulated telemetry values.
-                distance = self.DISTANCE - (random.random() * 150)
-                intensity = self.INTENSITY - (random.random() * 100)
-                msg_txt_formatted = MSG_TXT.format(distance=distance, intensity=intensity)
+                distance = self.DISTANCE - (random.random() * 200)
+                intensity = self.INTENSITY - (random.random() * 150)
+                msg_txt_formatted = self.MSG_TXT.format(distance=distance, intensity=intensity)
                 message = Message(msg_txt_formatted)
 
                 # Add a custom application property to the message.
                 # An IoT hub can filter on these properties without access to the message body.
-                if self.DISTANCE < 100. && self.INTENSITY < 200:
+                if self.DISTANCE < 150. and self.INTENSITY < 200:
                   message.custom_properties["intruderAlert"] = "true"
                 else:
                   message.custom_properties["intruderAlert"] = "false"
@@ -82,7 +82,7 @@ class IntruderDetector(object):
                 print( "Sending message: {}".format(message) )
                 self.client.send_message(message)
                 print( "Message sent" )
-                time.sleep(INTERVAL)
+                time.sleep(self.INTERVAL)
 
         except KeyboardInterrupt:
             print ( "intruderAlert stopped" )
