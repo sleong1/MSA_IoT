@@ -73,9 +73,10 @@ class IntruderDetector(object):
                     # message.custom_properties["intruderAlert"] = "true"
                     file = "intruderAlert{}.jpg".format(random.choice([0,1]))
                     with open(file, "r") as f:
-                        intruder_img = f
+                        # intruder_img = f.data
+                        intruder_img = "None"
                 else:
-                    intruder_img = None
+                    intruder_img = "None"
                     # message.custom_properties["intruderAlert"] = "false"
 
 
